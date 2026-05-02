@@ -1,0 +1,69 @@
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => NIEPMD Admin
+            [email] => admin@niepmd.gov.in
+            [email_verified_at] => 
+            [role] => employer
+            [created_at] => 2026-05-02T13:21:39.000000Z
+            [updated_at] => 2026-05-02T13:21:39.000000Z
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [name] => Rahul (User)
+            [email] => rahul@example.com
+            [email_verified_at] => 
+            [role] => user
+            [created_at] => 2026-05-02T13:21:40.000000Z
+            [updated_at] => 2026-05-02T13:21:40.000000Z
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [name] => Dr. Smith (Trainer)
+            [email] => trainer@example.com
+            [email_verified_at] => 
+            [role] => trainer
+            [created_at] => 2026-05-02T13:21:40.000000Z
+            [updated_at] => 2026-05-02T13:21:40.000000Z
+        )
+
+    [3] => Array
+        (
+            [id] => 4
+            [name] => mahi
+            [email] => mahi@gmail.com
+            [email_verified_at] => 
+            [role] => trainer
+            [created_at] => 2026-05-02T14:01:33.000000Z
+            [updated_at] => 2026-05-02T14:01:33.000000Z
+        )
+
+    [4] => Array
+        (
+            [id] => 5
+            [name] => koushik
+            [email] => koushik@gmail.com
+            [email_verified_at] => 
+            [role] => user
+            [created_at] => 2026-05-02T19:13:16.000000Z
+            [updated_at] => 2026-05-02T19:13:16.000000Z
+        )
+
+    [5] => Array
+        (
+            [id] => 6
+            [name] => Ashwin
+            [email] => ashwin@gmail.com
+            [email_verified_at] => 
+            [role] => employer
+            [created_at] => 2026-05-02T19:14:18.000000Z
+            [updated_at] => 2026-05-02T19:14:18.000000Z
+        )
+
+)
