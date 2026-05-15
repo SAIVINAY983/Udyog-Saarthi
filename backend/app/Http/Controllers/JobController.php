@@ -55,17 +55,17 @@ class JobController extends Controller
     public function update(Request $request, string $id)
     {
         $job = JobPosting::findOrFail($id);
-        if ($request->user()->id !== $job->employer_id) {
+        if ($request->user()->id !== $job->employer_id && $request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $job->update($request->all());
         return response()->json($job);
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         $job = JobPosting::findOrFail($id);
-        if ($request->user()->id !== $job->employer_id) {
+        if ($request->user()->id !== $job->employer_id && $request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $job->delete();

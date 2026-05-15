@@ -13,20 +13,34 @@ export default function ApplyWizard({ job, user, onClose, highContrast }) {
     email: user?.email || '',
     coverLetter: ''
   });
+  const [resumeSource, setResumeSource] = useState('ai'); // ai or upload
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   const steps = [
-    { title: "Review Job", desc: "Confirm this job matches your skills." },
-    { title: "Personal Details", desc: "We've auto-filled these from your profile." },
-    { title: "Attach Resume", desc: "Use your AI Resume or upload a new one." },
-    { title: "Confirm & Send", desc: "Review your application one last time." }
+    { title: "Skill Analysis", desc: "See how well you match this role." },
+    { title: "Personal Details", desc: "Confirm your contact info." },
+    { title: "Attach Resume", desc: "Use your saved AI Resume." },
+    { title: "Confirm & Send", desc: "Final review." }
   ];
+
+  // Unique Feature: Skill Match Logic
+  const userSkills = user?.profile?.skills?.toLowerCase().split(',').map(s => s.trim()) || [];
+  const requiredSkills = job.skills_required?.toLowerCase().split(',').map(s => s.trim()) || [];
+  const matchedSkills = requiredSkills.filter(s => userSkills.includes(s));
+  const missingSkills = requiredSkills.filter(s => !userSkills.includes(s));
+  const matchPercentage = requiredSkills.length > 0 
+    ? Math.round((matchedSkills.length / requiredSkills.length) * 100) 
+    : 100;
 
   const handleApply = async () => {
     setLoading(true);
     setError(null);
     try {
-      // we can also pass formData to the backend if the API supported it
-      await api.post('/applications', { job_posting_id: job.id });
+      // Send resume type with application
+      await api.post('/applications', { 
+        job_posting_id: job.id,
+        resume_type: resumeSource 
+      });
       setStep(4); // Success step
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit application. Please try again.');
@@ -63,12 +77,47 @@ export default function ApplyWizard({ job, user, onClose, highContrast }) {
           <div className="min-h-[250px]">
             {step === 0 && (
               <div className="space-y-6 animate-fade-in">
-                <h3 className="text-2xl font-black">{steps[0].title}</h3>
-                <p className="text-lg opacity-70 font-medium">{steps[0].desc}</p>
-                <div className={`p-6 rounded-3xl ${highContrast ? 'bg-gray-900 border border-yellow-300' : 'bg-gray-50 border border-gray-100'}`}>
-                  <p className="font-black text-xl text-[#000080]">{job.title}</p>
-                  <p className="text-sm font-black opacity-50 uppercase tracking-widest mt-1">{job.location}</p>
-                  <div className="mt-6 text-lg opacity-80 leading-relaxed line-clamp-4 font-medium">{job.description}</div>
+                <div className="flex justify-between items-end">
+                  <h3 className="text-2xl font-black">{steps[0].title}</h3>
+                  <div className={`px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest ${matchPercentage >= 70 ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                    {matchPercentage}% Match
+                  </div>
+                </div>
+                
+                <div className={`p-6 rounded-[2.5rem] border-2 transition-all ${highContrast ? 'bg-black border-yellow-300' : 'bg-gray-50 border-gray-100 shadow-inner'}`}>
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-black ${matchPercentage >= 70 ? 'bg-green-500 text-white' : 'bg-[#FF9933] text-white'}`}>
+                      {matchPercentage}%
+                    </div>
+                    <div>
+                      <p className="font-black text-xl leading-none">Compatibility Score</p>
+                      <p className="text-sm opacity-60 font-bold mt-1">Based on your community profile skills.</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      {matchedSkills.map(s => (
+                        <span key={s} className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-black uppercase tracking-widest flex items-center gap-1">
+                          <CheckCircle size={12} /> {s}
+                        </span>
+                      ))}
+                      {missingSkills.map(s => (
+                        <span key={s} className="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-xs font-black uppercase tracking-widest">
+                          Missing: {s}
+                        </span>
+                      ))}
+                    </div>
+
+                    {missingSkills.length > 0 && (
+                      <div className={`mt-6 p-4 rounded-2xl border-2 border-dashed ${highContrast ? 'border-yellow-300/30' : 'border-orange-200 bg-orange-50/50'}`}>
+                        <p className="text-sm font-black text-[#000080] mb-2 uppercase tracking-widest">💡 Skill Gap Tip</p>
+                        <p className="text-sm font-medium leading-relaxed">
+                          We recommend taking the <span className="font-black">"{missingSkills[0].toUpperCase()}"</span> module in the Training Hub to increase your chances!
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -114,14 +163,33 @@ export default function ApplyWizard({ job, user, onClose, highContrast }) {
                 <h3 className="text-2xl font-black">{steps[2].title}</h3>
                 <p className="text-lg opacity-70 font-medium">{steps[2].desc}</p>
                 <div className="grid grid-cols-2 gap-6">
-                  <button className={`p-8 rounded-3xl border-4 flex flex-col items-center gap-4 transition-all hover:scale-105 ${highContrast ? 'border-yellow-300' : 'border-[#FF9933] bg-orange-50/50'}`}>
-                    <CheckCircle className={highContrast ? 'text-yellow-300' : 'text-[#FF9933]'} size={32} />
+                  <button 
+                    onClick={() => setResumeSource('ai')}
+                    className={`p-8 rounded-3xl border-4 flex flex-col items-center gap-4 transition-all hover:scale-105 ${resumeSource === 'ai' ? (highContrast ? 'border-yellow-300 bg-yellow-300 text-black' : 'border-[#FF9933] bg-orange-50') : 'border-gray-50'}`}
+                  >
+                    <CheckCircle className={resumeSource === 'ai' ? (highContrast ? 'text-black' : 'text-[#FF9933]') : 'text-gray-300'} size={32} />
                     <span className="font-black text-lg">Use AI Resume</span>
                   </button>
-                  <button className="p-8 rounded-3xl border-4 border-gray-100 flex flex-col items-center gap-4 opacity-30 cursor-not-allowed">
-                    <Upload size={32} />
-                    <span className="font-black text-lg">Upload PDF</span>
-                  </button>
+                  
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      id="resume-upload" 
+                      className="hidden" 
+                      accept=".pdf,.doc,.docx"
+                      onChange={(e) => {
+                        setResumeSource('upload');
+                        setUploadedFile(e.target.files[0]);
+                      }}
+                    />
+                    <label 
+                      htmlFor="resume-upload"
+                      className={`p-8 rounded-3xl border-4 flex flex-col items-center gap-4 transition-all hover:scale-105 cursor-pointer h-full ${resumeSource === 'upload' ? (highContrast ? 'border-yellow-300 bg-yellow-300 text-black' : 'border-[#FF9933] bg-orange-50') : 'border-gray-50'}`}
+                    >
+                      <Upload className={resumeSource === 'upload' ? (highContrast ? 'text-black' : 'text-[#FF9933]') : 'text-gray-300'} size={32} />
+                      <span className="font-black text-lg text-center">{uploadedFile ? uploadedFile.name : 'Upload PDF'}</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             )}

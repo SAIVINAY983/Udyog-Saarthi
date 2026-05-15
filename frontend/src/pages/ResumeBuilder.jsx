@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { User, Mail, MapPin, Briefcase, GraduationCap, Download, CheckCircle, ChevronRight, ChevronLeft, Phone, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Mail, MapPin, Briefcase, GraduationCap, Download, CheckCircle, ChevronRight, ChevronLeft, Phone, Link as LinkIcon, Image as ImageIcon, Save } from 'lucide-react';
 
 import html2pdf from 'html2pdf.js';
 
 import { useNavigate } from 'react-router-dom';
+import api from '../api';
 
 export default function ResumeBuilder({ highContrast, user }) {
   const navigate = useNavigate();
@@ -27,10 +28,33 @@ export default function ResumeBuilder({ highContrast, user }) {
     skills: user?.profile?.skills || '',
     photo: null
   });
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const res = await api.get('/resume');
+        if (res.data) {
+          setFormData({
+            ...formData,
+            ...res.data,
+            name: res.data.name || user?.name || '',
+            email: res.data.email || user?.email || '',
+          });
+        }
+      } catch (err) {
+        console.error('No existing resume found or fetch failed');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchResume();
+  }, []);
 
   const steps = [
     { title: "Contact", icon: <User /> },
-    { title: "Summary", icon: <CheckCircle /> },
+    { title: "Summary & Skills", icon: <CheckCircle /> },
     { title: "Edu & Exp", icon: <GraduationCap /> },
     { title: "Projects", icon: <Briefcase /> },
     { title: "Extras", icon: <CheckCircle /> },
@@ -66,10 +90,35 @@ export default function ResumeBuilder({ highContrast, user }) {
     };
 
     html2pdf().set(opt).from(element).save();
+    handleSave(); // Auto-save when downloading
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await api.post('/resume', formData);
+      alert('Resume saved to profile!');
+    } catch (err) {
+      console.error('Failed to save resume', err);
+      alert('Failed to save resume. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
     <div className="max-w-5xl mx-auto py-10 px-4">
+      <div className="flex justify-between items-center mb-8 px-4">
+        <button 
+          onClick={() => navigate('/dashboard')}
+          className={`flex items-center gap-2 font-black uppercase tracking-widest text-sm transition-all hover:scale-105 active:scale-95 ${highContrast ? 'text-yellow-300' : 'text-gray-400 hover:text-[#000080]'}`}
+        >
+          &larr; Exit to Dashboard
+        </button>
+        <div className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest ${highContrast ? 'bg-yellow-300 text-black' : 'bg-orange-50 text-[#FF9933]'}`}>
+          AI Resume Builder
+        </div>
+      </div>
       <div className={`p-10 rounded-[3rem] shadow-2xl ${highContrast ? 'border-2 border-yellow-300 bg-black' : 'bg-white border border-gray-100'}`}>
         <div className="flex justify-between items-center mb-16 overflow-x-auto pb-4 scrollbar-hide print:hidden">
           {steps.map((s, i) => (
@@ -108,15 +157,34 @@ export default function ResumeBuilder({ highContrast, user }) {
 
           {step === 1 && (
             <div className="space-y-8 animate-fade-in">
-              <h2 className="text-4xl font-black tracking-tight">Professional Summary</h2>
-              <p className="text-lg opacity-60 font-medium">Write a short 3–4 line summary highlighting your profile.</p>
-              <textarea 
-                name="summary" 
-                className="w-full p-6 rounded-3xl border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[#FF9933] outline-none h-[150px] font-medium transition-all"
-                placeholder="e.g., Highly motivated individual with a strong foundation in..."
-                value={formData.summary}
-                onChange={handleChange}
-              />
+              <div className="flex justify-between items-center">
+                <h2 className="text-4xl font-black tracking-tight">Summary & Core Skills</h2>
+                <span className="px-4 py-1 bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest rounded-full">Mandatory Section</span>
+              </div>
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <label className="text-xs font-black uppercase tracking-widest opacity-40 ml-4">Professional Summary</label>
+                  <textarea 
+                    name="summary" 
+                    className="w-full p-6 rounded-3xl border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[#FF9933] outline-none h-[120px] font-medium transition-all"
+                    placeholder="e.g., Highly motivated individual with a strong foundation in..."
+                    value={formData.summary}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs font-black uppercase tracking-widest opacity-40 ml-4">Core Skills (Mandatory)</label>
+                  <textarea 
+                    name="skills" 
+                    className="w-full p-6 rounded-3xl border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[#FF9933] outline-none h-[120px] font-medium transition-all"
+                    placeholder="e.g., JavaScript, React, Public Speaking, Data Entry, Team Collaboration"
+                    value={formData.skills}
+                    onChange={handleChange}
+                    required
+                  />
+                  <p className="text-[10px] text-slate-400 font-bold ml-4 uppercase">Tip: Separate skills with commas for better visibility.</p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -226,14 +294,23 @@ export default function ResumeBuilder({ highContrast, user }) {
 
           {step === 5 && (
             <div className="space-y-8 animate-fade-in">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-wrap gap-4 items-center">
                 <h2 className="text-4xl font-black tracking-tight">Your Resume is Ready</h2>
-                <button 
-                  onClick={downloadResume}
-                  className={`px-10 py-4 rounded-2xl font-black text-lg flex items-center gap-3 transition-all shadow-xl hover:scale-105 active:scale-95 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white shadow-blue-200'}`}
-                >
-                  <Download size={24} /> Save PDF
-                </button>
+                <div className="flex gap-4">
+                  <button 
+                    onClick={handleSave}
+                    disabled={isSaving}
+                    className={`px-10 py-4 rounded-2xl font-black text-lg flex items-center gap-3 transition-all shadow-xl hover:scale-105 active:scale-95 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#FF9933] text-white shadow-orange-200'}`}
+                  >
+                    <Save size={24} /> {isSaving ? 'Saving...' : 'Save to Profile'}
+                  </button>
+                  <button 
+                    onClick={downloadResume}
+                    className={`px-10 py-4 rounded-2xl font-black text-lg flex items-center gap-3 transition-all shadow-xl hover:scale-105 active:scale-95 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white shadow-blue-200'}`}
+                  >
+                    <Download size={24} /> Save PDF
+                  </button>
+                </div>
               </div>
               
               {/* CLEAN, SINGLE-COLUMN RESUME FORMAT */}
@@ -277,7 +354,21 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 4. EDUCATION */}
+                {/* 4. SKILLS SECTION (NEW) */}
+                {formData.skills && (
+                  <div className="mb-6">
+                    <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Core Skills</h2>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {formData.skills.split(',').map((skill, i) => (
+                        <span key={i} className="px-3 py-1 bg-gray-50 border border-gray-200 text-xs font-bold rounded-md uppercase tracking-tight">
+                          {skill.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 5. EDUCATION */}
                 {formData.education && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Education</h2>
@@ -289,7 +380,7 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 5. INTERNSHIPS / EXPERIENCE */}
+                {/* 6. INTERNSHIPS / EXPERIENCE */}
                 {formData.experience && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Internships / Experience</h2>
@@ -303,7 +394,7 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 6. PROJECTS */}
+                {/* 7. PROJECTS */}
                 {formData.projects && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Projects</h2>
@@ -317,7 +408,7 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 7. CERTIFICATIONS */}
+                {/* 8. CERTIFICATIONS */}
                 {formData.certifications && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Certifications</h2>
@@ -329,7 +420,7 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 8. RESEARCH PAPERS */}
+                {/* 9. RESEARCH PAPERS */}
                 {formData.researchPapers && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Research Papers</h2>
@@ -341,7 +432,7 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 9. ACHIEVEMENTS */}
+                {/* 10. ACHIEVEMENTS */}
                 {formData.achievements && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Achievements</h2>
@@ -353,7 +444,7 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 10. EXTRACURRICULAR ACTIVITIES */}
+                {/* 11. EXTRACURRICULAR ACTIVITIES */}
                 {formData.extracurriculars && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Extracurricular Activities</h2>
@@ -365,7 +456,7 @@ export default function ResumeBuilder({ highContrast, user }) {
                   </div>
                 )}
 
-                {/* 11. HOBBIES / INTERESTS */}
+                {/* 12. HOBBIES / INTERESTS */}
                 {formData.hobbies && (
                   <div className="mb-6">
                     <h2 className="text-sm font-bold uppercase border-b border-gray-300 pb-1 mb-2 tracking-widest">Hobbies / Interests</h2>

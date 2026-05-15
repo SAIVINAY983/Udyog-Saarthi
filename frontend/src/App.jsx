@@ -11,14 +11,20 @@ import TrainingCourse from './pages/TrainingCourse';
 import AdminDashboard from './pages/AdminDashboard';
 import VoiceNavigator from './components/VoiceNavigator';
 import MentorBot from './components/MentorBot';
+import NotificationCenter from './components/NotificationCenter';
+import LiveInterviewRoom from './pages/LiveInterviewRoom';
 import api from './api';
+import { Bell, Languages } from 'lucide-react';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 
-// Accessibility Context could go here or we can just apply a class to document.body
-function App() {
+function AppContent() {
+  const { t, language, setLanguage } = useLanguage();
   const [highContrast, setHighContrast] = useState(false);
   const [simpleMode, setSimpleMode] = useState(false);
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -38,6 +44,24 @@ function App() {
 
     verifyUser();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const fetchUnread = async () => {
+        try {
+          const res = await api.get('/notifications');
+          if (Array.isArray(res.data)) {
+            setUnreadCount(res.data.filter(n => !n.is_read).length);
+          }
+        } catch (err) {
+          console.error('Failed to fetch unread notifications');
+        }
+      };
+      fetchUnread();
+      const interval = setInterval(fetchUnread, 30000); // Check every 30s
+      return () => clearInterval(interval);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (highContrast) {
@@ -77,22 +101,35 @@ function App() {
               className={`flex items-center space-x-2 px-3 py-1 rounded-lg transition ${highContrast ? 'bg-white/20' : 'bg-white/40 hover:bg-white/60 border border-gray-200 shadow-sm'}`}
               aria-label="Read page aloud"
             >
-              <Volume2 size={20} /> <span className="hidden sm:inline">Read Aloud</span>
+              <Volume2 size={20} /> <span className="hidden sm:inline">{t('readAloud')}</span>
             </button>
             <button 
               onClick={() => setHighContrast(!highContrast)}
               className={`flex items-center space-x-2 px-3 py-1 rounded-lg transition ${highContrast ? 'bg-white/20' : 'bg-white/40 hover:bg-white/60 border border-gray-200 shadow-sm'}`}
               aria-label="Toggle High Contrast"
             >
-              {highContrast ? <Sun size={20} /> : <Moon size={20} />} <span className="hidden sm:inline">High Contrast</span>
+              {highContrast ? <Sun size={20} /> : <Moon size={20} />} <span className="hidden sm:inline">{t('highContrast')}</span>
             </button>
             <button 
               onClick={() => setSimpleMode(!simpleMode)}
               className={`flex items-center space-x-2 px-3 py-1 rounded-lg transition ${simpleMode ? (highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white') : (highContrast ? 'bg-white/20' : 'bg-white/40 hover:bg-white/60 border border-gray-200 shadow-sm')}`}
               aria-label="Toggle Simple Mode"
             >
-              <CheckCircle size={20} /> <span className="hidden sm:inline">{simpleMode ? 'Simple Mode ON' : 'Easy Reading'}</span>
+              <CheckCircle size={20} /> <span className="hidden sm:inline">{simpleMode ? t('simpleMode') : t('simpleMode')}</span>
             </button>
+          </div>
+          <div className="flex items-center gap-2 px-4">
+            <Languages size={18} className="opacity-40" />
+            <select 
+              value={language} 
+              onChange={(e) => setLanguage(e.target.value)}
+              className={`bg-transparent font-black text-xs uppercase tracking-widest outline-none cursor-pointer p-1 rounded ${highContrast ? 'text-yellow-300' : 'text-gray-700'}`}
+            >
+              <option value="en" className="text-black">English</option>
+              <option value="hi" className="text-black">Hindi (हिंदी)</option>
+              <option value="ta" className="text-black">Tamil (தமிழ்)</option>
+              <option value="te" className="text-black">Telugu (తెలుగు)</option>
+            </select>
           </div>
           <div className="px-4 text-[10px] font-bold uppercase tracking-widest opacity-50 hidden md:block">
             Udyog Saarthi • Dedicated to the Nation
@@ -113,13 +150,26 @@ function App() {
             <div className="flex gap-4">
               {user ? (
                 <>
-                  <Link to="/dashboard" className="px-4 py-2 font-bold hover:text-[#FF9933] transition">Dashboard</Link>
-                  <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 shadow-lg shadow-red-200 transition active:scale-95">Logout</button>
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowNotifications(true)}
+                      className={`p-2 rounded-xl transition transform active:scale-95 ${highContrast ? 'text-yellow-300' : 'text-gray-600 hover:text-[#FF9933]'}`}
+                    >
+                      <Bell size={24} />
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white animate-bounce">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                  <Link to="/dashboard" className="px-4 py-2 font-bold hover:text-[#FF9933] transition">{t('dashboard')}</Link>
+                  <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 shadow-lg shadow-red-200 transition active:scale-95">{t('logout')}</button>
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="px-4 py-2 font-bold hover:text-[#FF9933] transition">Login</Link>
-                  <Link to="/register" className={`px-6 py-2 rounded-xl font-bold shadow-lg transition transform active:scale-95 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#FF9933] text-white hover:bg-[#cc7a29] shadow-orange-200'}`}>Register</Link>
+                  <Link to="/login" className="px-4 py-2 font-bold hover:text-[#FF9933] transition">{t('login')}</Link>
+                  <Link to="/register" className={`px-6 py-2 rounded-xl font-bold shadow-lg transition transform active:scale-95 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#FF9933] text-white hover:bg-[#cc7a29] shadow-orange-200'}`}>{t('register')}</Link>
                 </>
               )}
             </div>
@@ -134,6 +184,7 @@ function App() {
             <Route path="/register" element={!user ? <Register setUser={setUser} /> : <Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={user ? <Dashboard user={user} highContrast={highContrast} simpleMode={simpleMode} /> : <Navigate to="/login" />} />
             <Route path="/interview" element={user ? <InterviewSimulator highContrast={highContrast} /> : <Navigate to="/login" />} />
+            <Route path="/interview-room/:id" element={user ? <LiveInterviewRoom highContrast={highContrast} /> : <Navigate to="/login" />} />
             <Route path="/resume" element={user ? <ResumeBuilder highContrast={highContrast} user={user} /> : <Navigate to="/login" />} />
             <Route path="/training/:id" element={user ? <TrainingCourse highContrast={highContrast} simpleMode={simpleMode} /> : <Navigate to="/login" />} />
             <Route path="/admin" element={user?.role === 'admin' ? <AdminDashboard highContrast={highContrast} /> : <Navigate to="/dashboard" />} />
@@ -146,9 +197,26 @@ function App() {
           highContrast={highContrast}
         />
         <MentorBot highContrast={highContrast} />
+        {showNotifications && (
+          <NotificationCenter 
+            user={user} 
+            highContrast={highContrast} 
+            onClose={() => {
+              setShowNotifications(false);
+              // Trigger a refresh of unread count
+              api.get('/notifications').then(res => setUnreadCount(res.data.filter(n => !n.is_read).length));
+            }} 
+          />
+        )}
       </div>
     </Router>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
+  );
+}

@@ -37,8 +37,8 @@ export default function Landing({ user, highContrast, simpleMode }) {
             </h1>
             <p className="text-xl md:text-2xl opacity-80 max-w-lg leading-relaxed font-medium">
               {simpleMode 
-                ? "We help you find jobs, learn new skills, and get ready for interviews. Everything is easy to use."
-                : "Empowering adults with disabilities through structured job coaching, inclusive training, and reserved employment opportunities."
+                ? "We help you find jobs and learn new skills for opportunities under the 4% reservation scheme."
+                : "Empowering adults with disabilities through job coaching for opportunities under the 4% reservation in NIEPMD and other institutions."
               }
             </p>
             {!user && (
@@ -59,6 +59,35 @@ export default function Landing({ user, highContrast, simpleMode }) {
               alt="Diverse professionals working together" 
               className="relative rounded-[3rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] w-full object-cover transform hover:scale-102 transition-transform duration-700 border-8 border-white"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Mission Statement Section (NEW) */}
+      <section className={`py-20 ${highContrast ? 'bg-black border-y border-yellow-300' : 'bg-white'}`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className={`p-12 md:p-20 rounded-[4rem] border-4 border-dashed animate-fade-in ${highContrast ? 'border-yellow-300' : 'border-orange-100 bg-orange-50/30'}`}>
+            <div className="max-w-4xl mx-auto text-center space-y-10">
+              <div className={`inline-block px-6 py-2 rounded-full font-black text-sm uppercase tracking-widest ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white'}`}>
+                Our Mission
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black leading-tight">
+                {simpleMode ? "Job coaching for 4% reservation opportunities" : "Progressive Web-based Application for Adults undergoing Job coaching"}
+              </h2>
+              <p className="text-xl md:text-2xl leading-relaxed font-medium opacity-80 italic">
+                "Adults undergoing job coaching for opportunities under the 4% reservation in NIEPMD and other institutions often lack a centralized platform to access relevant training resources and job opportunities. This project aims to provide easy access to job coaching, training materials, and career opportunities, empowering users with the tools to secure employment under the reservation scheme."
+              </p>
+              <div className="flex justify-center gap-10 pt-6">
+                <div className="flex flex-col items-center gap-2">
+                  <span className={`text-4xl font-black ${highContrast ? 'text-yellow-300' : 'text-[#FF9933]'}`}>4%</span>
+                  <span className="text-xs font-bold uppercase tracking-widest opacity-40">Reservation Focus</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <span className={`text-4xl font-black ${highContrast ? 'text-yellow-300' : 'text-[#128807]'}`}>NIEPMD</span>
+                  <span className="text-xs font-bold uppercase tracking-widest opacity-40">& Other Institutions</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -85,8 +114,8 @@ export default function Landing({ user, highContrast, simpleMode }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <FeatureCard 
               icon={<Briefcase className="w-8 h-8" />}
-              title={simpleMode ? "Good Jobs" : "Reserved Category Jobs"}
-              desc={simpleMode ? "Find jobs made for you in big companies." : "Direct access to vacancies under the 4% reservation scheme in government and private sectors."}
+              title={simpleMode ? "Good Jobs" : "4% Reserved Category Jobs"}
+              desc={simpleMode ? "Find jobs made for you in NIEPMD and other places." : "Direct access to vacancies under the 4% reservation scheme in NIEPMD and other institutions."}
               highContrast={highContrast}
             />
             <FeatureCard 

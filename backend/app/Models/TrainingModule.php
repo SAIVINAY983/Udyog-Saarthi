@@ -13,5 +13,15 @@ class TrainingModule extends Model
         'content_url',
         'module_type',
         'order_index',
+        'questions',
     ];
+
+    protected $casts = [
+        'questions' => 'array',
+    ];
+
+    public function trainer()
+    {
+        return $this->belongsTo(User::class, 'trainer_id');
+    }
 }

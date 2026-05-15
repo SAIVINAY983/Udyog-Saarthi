@@ -20,7 +20,14 @@ class TrainingModuleController extends Controller
             'content_url' => 'nullable|string',
             'module_type' => 'nullable|string',
             'order_index' => 'nullable|integer',
+            'questions' => 'nullable|array',
         ]);
+
+        // If file is uploaded
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('training', 'public');
+            $validated['content_url'] = '/storage/' . $path;
+        }
 
         $module = TrainingModule::create(array_merge($validated, [
             'trainer_id' => $request->user()->id,
@@ -29,29 +36,59 @@ class TrainingModuleController extends Controller
         return response()->json($module, 201);
     }
 
-    public function show(string $id)
+    public function upload(Request $request)
     {
-        $module = TrainingModule::findOrFail($id);
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
+        ]);
+
+        $path = $request->file('file')->store('training', 'public');
+        return response()->json(['path' => '/storage/' . $path]);
+    }
+
+    public function show(string $training)
+    {
+        $module = TrainingModule::findOrFail($training);
         return response()->json($module);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $training)
     {
-        $module = TrainingModule::findOrFail($id);
+        $module = TrainingModule::findOrFail($training);
         if ($request->user()->id !== $module->trainer_id && $request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-        $module->update($request->all());
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'content_url' => 'nullable|string',
+            'module_type' => 'nullable|string',
+            'order_index' => 'nullable|integer',
+            'questions' => 'nullable|array',
+        ]);
+
+        $module->update($validated);
         return response()->json($module);
     }
 
-    public function destroy(string $id)
+    public function destroy($training)
     {
-        $module = TrainingModule::findOrFail($id);
-        if ($request->user()->id !== $module->trainer_id && $request->user()->role !== 'admin') {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        $module = TrainingModule::find($training);
+        if (!$module) {
+            return response()->json(['message' => 'Module already deleted or not found.'], 404);
         }
+
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['message' => 'Not authenticated.'], 401);
+        }
+
+        if ($user->id !== $module->trainer_id && $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized. Only the trainer or admin can delete this.'], 403);
+        }
+
         $module->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Deleted successfully.'], 200);
     }
 }

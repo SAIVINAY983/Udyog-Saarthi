@@ -10,6 +10,14 @@ class Application extends Model
         'job_posting_id',
         'user_id',
         'status',
+        'resume_type',
+        'resume_path',
+        'notes',
+        'interview_score',
+        'interview_time',
+        'meeting_link',
+        'assessment_score',
+        'assessment_status',
     ];
 
     public function jobPosting()
