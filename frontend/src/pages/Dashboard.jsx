@@ -249,6 +249,150 @@ export default function Dashboard({ user, highContrast, simpleMode }) {
         />
       )}
 
+      {/* Add Job Modal */}
+      {showAddJob && (
+        <div className="fixed inset-0 bg-chakra/20 backdrop-blur-xl flex items-center justify-center p-4 z-[100] animate-fade-in">
+          <div className="w-full max-w-2xl bg-white p-12 rounded-[3.5rem] shadow-2xl animate-scale-up border-2 border-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-saffron/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+            <div className="relative">
+              <div className="flex justify-between items-start mb-10">
+                <div>
+                  <span className="px-3 py-1 bg-saffron/10 text-saffron text-[10px] font-black uppercase tracking-widest rounded-full">Employer Studio</span>
+                  <h2 className="text-4xl font-black text-chakra-dark mt-2">Post New Opportunity</h2>
+                </div>
+                <button onClick={() => setShowAddJob(false)} className="p-3 hover:bg-gray-100 rounded-full transition-colors text-chakra/30"><X size={24} /></button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                try {
+                  await api.post('/jobs', newJob);
+                  setShowAddJob(false);
+                  setNewJob({ title: '', description: '', location: '', job_type: 'Full-time', reservation_category: 'PWD', skills_required: '' });
+                  fetchData();
+                } catch (err) { alert('Post failed'); } finally { setIsSubmitting(false); }
+              }} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-chakra/30 ml-4">Job Title</label>
+                  <input type="text" placeholder="e.g. Frontend Developer" className="w-full p-5 bg-chakra/5 rounded-2xl border-2 border-transparent focus:border-saffron focus:bg-white outline-none transition-all font-bold" value={newJob.title} onChange={e => setNewJob({...newJob, title: e.target.value})} required />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-chakra/30 ml-4">Location</label>
+                    <input type="text" placeholder="City" className="w-full p-5 bg-chakra/5 rounded-2xl border-2 border-transparent focus:border-saffron focus:bg-white outline-none transition-all font-bold" value={newJob.location} onChange={e => setNewJob({...newJob, location: e.target.value})} required />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-chakra/30 ml-4">Job Type</label>
+                    <select className="w-full p-5 bg-chakra/5 rounded-2xl border-2 border-transparent focus:border-saffron focus:bg-white outline-none transition-all font-bold" value={newJob.job_type} onChange={e => setNewJob({...newJob, job_type: e.target.value})}>
+                      <option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-chakra/30 ml-4">Required Skills</label>
+                  <input type="text" placeholder="e.g. React, CSS, Node.js" className="w-full p-5 bg-chakra/5 rounded-2xl border-2 border-transparent focus:border-saffron focus:bg-white outline-none transition-all font-bold" value={newJob.skills_required} onChange={e => setNewJob({...newJob, skills_required: e.target.value})} required />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-chakra/30 ml-4">Description</label>
+                  <textarea className="w-full p-5 bg-chakra/5 rounded-3xl h-32 border-2 border-transparent focus:border-saffron focus:bg-white outline-none transition-all font-medium resize-none" placeholder="Describe the role..." value={newJob.description} onChange={e => setNewJob({...newJob, description: e.target.value})} required></textarea>
+                </div>
+                <button type="submit" disabled={isSubmitting} className="w-full py-5 bg-saffron text-white rounded-2xl font-black text-lg shadow-xl shadow-saffron/20 hover:scale-[1.02] transition-transform">
+                  {isSubmitting ? 'Publishing...' : 'Deploy Opportunity'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Job Modal */}
+      {editingJob && (
+        <div className="fixed inset-0 bg-chakra/20 backdrop-blur-xl flex items-center justify-center p-4 z-[100] animate-fade-in">
+          <div className="w-full max-w-2xl bg-white p-12 rounded-[3.5rem] shadow-2xl animate-scale-up border-2 border-white relative overflow-hidden">
+            <div className="relative">
+              <div className="flex justify-between items-start mb-10">
+                <h2 className="text-4xl font-black text-chakra-dark">Update Posting</h2>
+                <button onClick={() => setEditingJob(null)} className="p-3 hover:bg-gray-100 rounded-full transition-colors text-chakra/30"><X size={24} /></button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                try {
+                  await api.put(`/jobs/${editingJob.id}`, editingJob);
+                  setEditingJob(null);
+                  fetchData();
+                } catch (err) { alert('Update failed'); } finally { setIsSubmitting(false); }
+              }} className="space-y-6">
+                <input type="text" className="w-full p-5 bg-chakra/5 rounded-2xl font-bold" value={editingJob.title} onChange={e => setEditingJob({...editingJob, title: e.target.value})} required />
+                <textarea className="w-full p-5 bg-chakra/5 rounded-3xl h-32 font-medium" value={editingJob.description} onChange={e => setEditingJob({...editingJob, description: e.target.value})} required></textarea>
+                <button type="submit" disabled={isSubmitting} className="w-full py-5 bg-chakra text-white rounded-2xl font-black text-lg shadow-xl">
+                  {isSubmitting ? 'Saving...' : 'Sync Changes'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Training Module Modal */}
+      {showAddModule && (
+        <div className="fixed inset-0 bg-chakra/20 backdrop-blur-xl flex items-center justify-center p-4 z-[100] animate-fade-in">
+          <div className="w-full max-w-2xl bg-white p-12 rounded-[3.5rem] shadow-2xl animate-scale-up border-2 border-white relative overflow-hidden">
+            <div className="relative">
+              <div className="flex justify-between items-start mb-10">
+                <h2 className="text-4xl font-black text-chakra-dark">Create Training Module</h2>
+                <button onClick={() => setShowAddModule(false)} className="p-3 hover:bg-gray-100 rounded-full transition-colors text-chakra/30"><X size={24} /></button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                try {
+                  await api.post('/training', newModule);
+                  setShowAddModule(false);
+                  setNewModule({ title: '', description: '', module_type: 'Video', questions: [], file: null });
+                  fetchData();
+                } catch (err) { alert('Post failed'); } finally { setIsSubmitting(false); }
+              }} className="space-y-6">
+                <input type="text" placeholder="Module Title" className="w-full p-5 bg-chakra/5 rounded-2xl font-bold" value={newModule.title} onChange={e => setNewModule({...newModule, title: e.target.value})} required />
+                <textarea className="w-full p-5 bg-chakra/5 rounded-3xl h-32 font-medium" placeholder="Module Description" value={newModule.description} onChange={e => setNewModule({...newModule, description: e.target.value})} required></textarea>
+                <button type="submit" disabled={isSubmitting} className="w-full py-5 bg-emerald text-white rounded-2xl font-black text-lg shadow-xl shadow-emerald/20">
+                  {isSubmitting ? 'Creating...' : 'Publish Module'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Training Module Modal */}
+      {editingModule && (
+        <div className="fixed inset-0 bg-chakra/20 backdrop-blur-xl flex items-center justify-center p-4 z-[100] animate-fade-in">
+          <div className="w-full max-w-2xl bg-white p-12 rounded-[3.5rem] shadow-2xl animate-scale-up border-2 border-white relative overflow-hidden">
+            <div className="relative">
+              <div className="flex justify-between items-start mb-10">
+                <h2 className="text-4xl font-black text-chakra-dark">Edit Module</h2>
+                <button onClick={() => setEditingModule(null)} className="p-3 hover:bg-gray-100 rounded-full transition-colors text-chakra/30"><X size={24} /></button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                try {
+                  await api.put(`/training/${editingModule.id}`, editingModule);
+                  setEditingModule(null);
+                  fetchData();
+                } catch (err) { alert('Update failed'); } finally { setIsSubmitting(false); }
+              }} className="space-y-6">
+                <input type="text" className="w-full p-5 bg-chakra/5 rounded-2xl font-bold" value={editingModule.title} onChange={e => setEditingModule({...editingModule, title: e.target.value})} required />
+                <textarea className="w-full p-5 bg-chakra/5 rounded-3xl h-32 font-medium" value={editingModule.description} onChange={e => setEditingModule({...editingModule, description: e.target.value})} required></textarea>
+                <button type="submit" disabled={isSubmitting} className="w-full py-5 bg-chakra text-white rounded-2xl font-black text-lg shadow-xl">
+                  {isSubmitting ? 'Saving...' : 'Sync Changes'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
