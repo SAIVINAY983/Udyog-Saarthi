@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "public": true,
+  "name": "udyog-saarthi-frontend",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
