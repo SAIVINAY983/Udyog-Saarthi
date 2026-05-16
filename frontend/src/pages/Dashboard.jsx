@@ -26,7 +26,8 @@ import {
   Layout, 
   BookOpen,
   ArrowUpRight,
-  Award
+  Award,
+  X
 } from 'lucide-react';
 import ApplyWizard from '../components/ApplyWizard';
 import AssessmentModal from '../components/AssessmentModal';
