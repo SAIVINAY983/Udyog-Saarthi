@@ -14,9 +14,9 @@ services:
       - key: DB_CONNECTION
         value: mongodb
       - key: DB_URI
-        fromContext: DB_URI
+        sync: false
       - key: APP_KEY
-        fromContext: APP_KEY
+        sync: false
       - key: DB_DATABASE
         value: udyog_saarthi
       - key: SESSION_DRIVER
