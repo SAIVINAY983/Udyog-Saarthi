@@ -93,85 +93,99 @@ function AppContent() {
   return (
     <Router>
       <div className={`min-h-screen ${highContrast ? 'bg-black text-yellow-300' : 'bg-white text-gray-900'} transition-colors duration-300 pb-20`}>
-        {/* Accessibility Toolbar */}
-        <div className={`flex justify-between items-center p-2 shadow-inner ${highContrast ? 'bg-gray-900 border-b border-yellow-300' : 'bg-gradient-to-r from-[#FF9933] via-white to-[#128807] text-gray-800 border-b border-gray-100'}`}>
-          <div className="flex space-x-4 px-4">
+        {/* Accessibility Toolbar - Premium Style */}
+        <div className={`flex justify-between items-center py-2 px-6 border-b transition-all duration-500 ${highContrast ? 'bg-black border-yellow-300' : 'bg-chakra text-white/90 border-white/10'}`}>
+          <div className="flex space-x-3">
             <button 
               onClick={toggleTextToSpeech}
-              className={`flex items-center space-x-2 px-3 py-1 rounded-lg transition ${highContrast ? 'bg-white/20' : 'bg-white/40 hover:bg-white/60 border border-gray-200 shadow-sm'}`}
+              className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-xs font-bold uppercase tracking-wider"
               aria-label="Read page aloud"
             >
-              <Volume2 size={20} /> <span className="hidden sm:inline">{t('readAloud')}</span>
+              <Volume2 size={16} /> <span className="hidden sm:inline">Audio</span>
             </button>
             <button 
               onClick={() => setHighContrast(!highContrast)}
-              className={`flex items-center space-x-2 px-3 py-1 rounded-lg transition ${highContrast ? 'bg-white/20' : 'bg-white/40 hover:bg-white/60 border border-gray-200 shadow-sm'}`}
+              className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-xs font-bold uppercase tracking-wider"
               aria-label="Toggle High Contrast"
             >
-              {highContrast ? <Sun size={20} /> : <Moon size={20} />} <span className="hidden sm:inline">{t('highContrast')}</span>
+              {highContrast ? <Sun size={16} /> : <Moon size={16} />} <span className="hidden sm:inline">Contrast</span>
             </button>
             <button 
               onClick={() => setSimpleMode(!simpleMode)}
-              className={`flex items-center space-x-2 px-3 py-1 rounded-lg transition ${simpleMode ? (highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white') : (highContrast ? 'bg-white/20' : 'bg-white/40 hover:bg-white/60 border border-gray-200 shadow-sm')}`}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg transition-all text-xs font-bold uppercase tracking-wider ${simpleMode ? 'bg-saffron text-white shadow-lg shadow-saffron/20' : 'bg-white/10 hover:bg-white/20'}`}
               aria-label="Toggle Simple Mode"
             >
-              <CheckCircle size={20} /> <span className="hidden sm:inline">{simpleMode ? t('simpleMode') : t('simpleMode')}</span>
+              <CheckCircle size={16} /> <span className="hidden sm:inline">{simpleMode ? 'Easy Mode ON' : 'Easy Mode'}</span>
             </button>
           </div>
-          <div className="flex items-center gap-2 px-4">
-            <Languages size={18} className="opacity-40" />
-            <select 
-              value={language} 
-              onChange={(e) => setLanguage(e.target.value)}
-              className={`bg-transparent font-black text-xs uppercase tracking-widest outline-none cursor-pointer p-1 rounded ${highContrast ? 'text-yellow-300' : 'text-gray-700'}`}
-            >
-              <option value="en" className="text-black">English</option>
-              <option value="hi" className="text-black">Hindi (हिंदी)</option>
-              <option value="ta" className="text-black">Tamil (தமிழ்)</option>
-              <option value="te" className="text-black">Telugu (తెలుగు)</option>
-            </select>
-          </div>
-          <div className="px-4 text-[10px] font-bold uppercase tracking-widest opacity-50 hidden md:block">
-            Udyog Saarthi • Dedicated to the Nation
+          
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Languages size={14} className="opacity-50" />
+              <select 
+                value={language} 
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent font-black text-[10px] uppercase tracking-[0.2em] outline-none cursor-pointer p-1"
+              >
+                <option value="en" className="text-black">EN</option>
+                <option value="hi" className="text-black">HI</option>
+                <option value="ta" className="text-black">TA</option>
+                <option value="te" className="text-black">TE</option>
+              </select>
+            </div>
+            <div className="h-4 w-px bg-white/10 hidden md:block"></div>
+            <div className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 hidden md:block">
+              Dedicated to the Nation
+            </div>
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className={`p-4 sticky top-0 z-40 backdrop-blur-md ${highContrast ? 'bg-black border-b border-yellow-300' : 'bg-white/80 border-b border-gray-100'}`}>
+        {/* Navigation - Ultra Premium */}
+        <nav className={`p-5 sticky top-0 z-50 transition-all duration-500 ${highContrast ? 'bg-black border-b border-yellow-300' : 'bg-white/70 backdrop-blur-2xl border-b border-chakra/5'}`}>
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <Link to="/" className="text-2xl font-black flex items-center gap-2 group">
-              <div className={`p-2 rounded-xl transition-transform group-hover:rotate-12 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white'}`}>
+            <Link to="/" className="flex items-center gap-4 group">
+              <div className="w-12 h-12 rounded-2xl bg-chakra flex items-center justify-center text-white shadow-2xl shadow-chakra/20 transition-transform group-hover:scale-110 group-hover:rotate-6">
                 <Briefcase size={24} />
               </div>
-              <span className={highContrast ? 'text-yellow-300' : 'bg-gradient-to-r from-[#FF9933] to-[#128807] bg-clip-text text-transparent'}>
-                Udyog Saarthi
-              </span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black tracking-tighter leading-none text-chakra-dark">Udyog Saarthi</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-saffron leading-none mt-1">Charioteer of Employment</span>
+              </div>
             </Link>
-            <div className="flex gap-4">
-              {user ? (
-                <>
-                  <div className="relative">
+
+            <div className="flex items-center gap-8">
+              <div className="hidden lg:flex items-center gap-6">
+                <Link to="/" className="nav-link">Home</Link>
+                <Link to="/interview" className="nav-link">Training</Link>
+                <Link to="/resume" className="nav-link">Resume</Link>
+              </div>
+
+              <div className="h-6 w-px bg-chakra/10 mx-2"></div>
+
+              <div className="flex items-center gap-4">
+                {user ? (
+                  <>
                     <button 
                       onClick={() => setShowNotifications(true)}
-                      className={`p-2 rounded-xl transition transform active:scale-95 ${highContrast ? 'text-yellow-300' : 'text-gray-600 hover:text-[#FF9933]'}`}
+                      className="p-2.5 rounded-xl text-chakra/60 hover:text-saffron hover:bg-saffron/5 transition-all relative"
                     >
-                      <Bell size={24} />
+                      <Bell size={22} />
                       {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white animate-bounce">
+                        <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-saffron text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-white ring-2 ring-saffron/20 animate-pulse">
                           {unreadCount}
                         </span>
                       )}
                     </button>
-                  </div>
-                  <Link to="/dashboard" className="px-4 py-2 font-bold hover:text-[#FF9933] transition">{t('dashboard')}</Link>
-                  <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 shadow-lg shadow-red-200 transition active:scale-95">{t('logout')}</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" className="px-4 py-2 font-bold hover:text-[#FF9933] transition">{t('login')}</Link>
-                  <Link to="/register" className={`px-6 py-2 rounded-xl font-bold shadow-lg transition transform active:scale-95 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#FF9933] text-white hover:bg-[#cc7a29] shadow-orange-200'}`}>{t('register')}</Link>
-                </>
-              )}
+                    <Link to="/dashboard" className="px-5 py-2.5 text-sm font-bold text-chakra hover:text-saffron transition-colors">Portal</Link>
+                    <button onClick={handleLogout} className="px-6 py-2.5 bg-red-500/10 text-red-600 rounded-xl font-bold text-sm hover:bg-red-500 hover:text-white transition-all shadow-xl shadow-red-500/5 active:scale-95 border border-red-500/20">Sign Out</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="px-5 py-2.5 text-sm font-bold text-chakra hover:text-saffron transition-colors">Sign In</Link>
+                    <Link to="/register" className="px-8 py-3 bg-saffron text-white rounded-2xl font-bold text-sm shadow-xl shadow-saffron/20 hover:bg-saffron-dark hover:shadow-saffron/40 transition-all active:scale-95">Get Started</Link>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </nav>

@@ -9,82 +9,82 @@ import {
   TrendingUp, 
   ChevronRight,
   MapPin,
-  Clock
+  Clock,
+  Star,
+  Award,
+  Users
 } from 'lucide-react';
 
 export default function Landing({ user, highContrast, simpleMode }) {
+  const heroImage = "/udyog_saarthi_hero_1778940425296.png";
+
   return (
-    <div className="flex flex-col w-full">
+    <div className={`flex flex-col w-full selection:bg-saffron/30 ${highContrast ? 'high-contrast' : ''}`}>
       {/* Hero Section */}
-      <section className="relative py-16 md:py-32 overflow-hidden">
-        <div className={`absolute top-0 right-0 w-1/2 h-full opacity-10 -z-10 ${highContrast ? 'hidden' : ''}`}>
-           <div className="absolute top-20 right-20 w-64 h-64 rounded-full bg-[#FF9933] blur-3xl animate-pulse"></div>
-           <div className="absolute bottom-20 right-40 w-96 h-96 rounded-full bg-[#128807] blur-3xl animate-pulse delay-700"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8 animate-slide-up">
-            <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold tracking-wide border shadow-sm ${highContrast ? 'border-yellow-300 text-yellow-300' : 'bg-white border-gray-100 text-[#000080]'}`}>
-              <ShieldCheck className="w-4 h-4 mr-2" />
-              {simpleMode ? "Safe and Real Jobs for You" : "Verified Opportunities for All"}
+      <section className="relative pt-12 pb-24 md:pt-20 md:pb-40 overflow-hidden bg-mesh">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-10 animate-slide-up z-10">
+            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold tracking-tight bg-white/40 backdrop-blur-md border border-white/50 text-chakra shadow-xl shadow-chakra/5">
+              <span className="flex h-2 w-2 rounded-full bg-saffron mr-2 animate-ping"></span>
+              {simpleMode ? "New Jobs for You" : "India's First Inclusive Job Chariot"}
             </div>
-            <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tighter">
+            
+            <h1 className="text-6xl md:text-8xl font-black leading-[1.1] tracking-tight text-chakra-dark">
               {simpleMode ? (
-                <>Good jobs for <span className={highContrast ? 'text-yellow-300 underline' : 'text-[#FF9933]'}>Everyone</span></>
+                <>Empowering <span className="text-saffron">Every</span> Indian</>
               ) : (
-                <>Bridging the gap between <span className={highContrast ? 'text-yellow-300 underline' : 'text-[#FF9933]'}>Ability and Opportunity</span></>
+                <>Your Path to <span className="text-saffron">Dignity</span> & Progress</>
               )}
             </h1>
-            <p className="text-xl md:text-2xl opacity-80 max-w-lg leading-relaxed font-medium">
+            
+            <p className="text-xl md:text-2xl text-chakra/70 max-w-lg leading-relaxed font-medium">
               {simpleMode 
-                ? "We help you find jobs and learn new skills for opportunities under the 4% reservation scheme."
-                : "Empowering adults with disabilities through job coaching for opportunities under the 4% reservation in NIEPMD and other institutions."
+                ? "We help you find jobs and learn skills at NIEPMD and beyond. Your future starts here."
+                : "A premium platform dedicated to job coaching and 4% reservation opportunities for adults under NIEPMD and national institutions."
               }
             </p>
+            
             {!user && (
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Link to="/register" className={`px-10 py-5 rounded-3xl text-xl font-black shadow-2xl hover:scale-105 transition-all transform active:scale-95 flex items-center gap-2 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-gradient-to-r from-[#FF9933] to-[#cc7a29] text-white shadow-orange-500/30'}`}>
-                  {simpleMode ? "Start Here" : "Get Started"} <ChevronRight className="w-6 h-6" />
+              <div className="flex flex-wrap gap-5 pt-4">
+                <Link to="/register" className="btn-primary text-xl px-10 py-5">
+                  {simpleMode ? "Start Here" : "Join the Movement"} <ChevronRight className="w-6 h-6" />
                 </Link>
-                <Link to="/login" className={`px-10 py-5 rounded-3xl text-xl font-bold border-2 hover:bg-gray-50 transition-all ${highContrast ? 'border-yellow-300 text-yellow-300' : 'border-gray-200 text-gray-800 bg-white shadow-sm'}`}>
+                <Link to="/login" className="btn-outline text-xl px-10 py-5">
                   Log In
                 </Link>
               </div>
             )}
-          </div>
-          <div className="relative animate-fade-in delay-200">
-            <div className={`absolute -inset-6 rounded-[3rem] opacity-20 blur-3xl ${highContrast ? 'bg-yellow-300' : 'bg-gradient-to-tr from-[#FF9933] to-[#128807]'}`}></div>
-            <img 
-              src="/hero.png" 
-              alt="Diverse professionals working together" 
-              className="relative rounded-[3rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] w-full object-cover transform hover:scale-102 transition-transform duration-700 border-8 border-white"
-            />
-          </div>
-        </div>
-      </section>
 
-      {/* Mission Statement Section (NEW) */}
-      <section className={`py-20 ${highContrast ? 'bg-black border-y border-yellow-300' : 'bg-white'}`}>
-        <div className="max-w-7xl mx-auto px-4">
-          <div className={`p-12 md:p-20 rounded-[4rem] border-4 border-dashed animate-fade-in ${highContrast ? 'border-yellow-300' : 'border-orange-100 bg-orange-50/30'}`}>
-            <div className="max-w-4xl mx-auto text-center space-y-10">
-              <div className={`inline-block px-6 py-2 rounded-full font-black text-sm uppercase tracking-widest ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white'}`}>
-                Our Mission
+            <div className="flex items-center gap-6 pt-8 border-t border-chakra/5">
+              <div className="flex -space-x-3">
+                {[1,2,3,4].map(i => (
+                  <div key={i} className="w-12 h-12 rounded-full border-4 border-white bg-gray-200 overflow-hidden">
+                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" />
+                  </div>
+                ))}
               </div>
-              <h2 className="text-4xl md:text-5xl font-black leading-tight">
-                {simpleMode ? "Job coaching for 4% reservation opportunities" : "Progressive Web-based Application for Adults undergoing Job coaching"}
-              </h2>
-              <p className="text-xl md:text-2xl leading-relaxed font-medium opacity-80 italic">
-                "Adults undergoing job coaching for opportunities under the 4% reservation in NIEPMD and other institutions often lack a centralized platform to access relevant training resources and job opportunities. This project aims to provide easy access to job coaching, training materials, and career opportunities, empowering users with the tools to secure employment under the reservation scheme."
-              </p>
-              <div className="flex justify-center gap-10 pt-6">
-                <div className="flex flex-col items-center gap-2">
-                  <span className={`text-4xl font-black ${highContrast ? 'text-yellow-300' : 'text-[#FF9933]'}`}>4%</span>
-                  <span className="text-xs font-bold uppercase tracking-widest opacity-40">Reservation Focus</span>
+              <div>
+                <p className="text-sm font-bold text-chakra">1,200+ Professionals</p>
+                <p className="text-xs font-medium text-chakra/50">Joined this month</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative lg:h-[600px] flex items-center justify-center">
+            <div className="absolute -inset-10 bg-gradient-to-tr from-saffron/20 via-white to-emerald/20 blur-3xl opacity-60"></div>
+            <div className="relative glass-card p-4 rotate-3 hover:rotate-0 transition-transform duration-700 animate-float">
+              <img 
+                src={heroImage} 
+                alt="Inclusive workspace" 
+                className="rounded-2xl shadow-2xl w-full h-full object-cover border-4 border-white"
+              />
+              <div className="absolute -bottom-10 -left-10 glass-card p-6 flex items-center gap-4 animate-bounce delay-700">
+                <div className="w-12 h-12 rounded-full bg-emerald flex items-center justify-center text-white">
+                  <Award size={24} />
                 </div>
-                <div className="flex flex-col items-center gap-2">
-                  <span className={`text-4xl font-black ${highContrast ? 'text-yellow-300' : 'text-[#128807]'}`}>NIEPMD</span>
-                  <span className="text-xs font-bold uppercase tracking-widest opacity-40">& Other Institutions</span>
+                <div>
+                  <p className="text-sm font-bold">NIEPMD Certified</p>
+                  <p className="text-[10px] font-bold opacity-50 uppercase tracking-widest">National Standard</p>
                 </div>
               </div>
             </div>
@@ -92,146 +92,144 @@ export default function Landing({ user, highContrast, simpleMode }) {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className={`py-16 ${highContrast ? 'bg-gray-900 border-y border-yellow-300' : 'bg-gradient-to-b from-white to-gray-50 border-y border-gray-100'}`}>
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-          <StatItem label="Active Jobs" value="500+" highContrast={highContrast} />
-          <StatItem label="Trained Users" value="1,200+" highContrast={highContrast} />
-          <StatItem label="Expert Coaches" value="50+" highContrast={highContrast} />
-          <StatItem label="Success Rate" value="85%" highContrast={highContrast} />
+      {/* Mission Section */}
+      <section className="py-24 relative">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="glass-card p-12 md:p-24 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-saffron/5 blur-3xl rounded-full"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald/5 blur-3xl rounded-full"></div>
+            
+            <div className="max-w-4xl mx-auto text-center space-y-12 relative z-10">
+              <div className="inline-block px-5 py-2 rounded-full bg-chakra text-white text-[10px] font-black uppercase tracking-[0.3em]">
+                Our National Mission
+              </div>
+              <h2 className="text-4xl md:text-6xl font-black leading-tight text-chakra-dark">
+                Revolutionizing Access to the <span className="text-emerald">4% Reservation</span> Scheme
+              </h2>
+              <p className="text-xl md:text-2xl leading-relaxed font-medium text-chakra/80 italic">
+                "Udyog Saarthi acts as a digital charioteer, bridging the gap between talent and institutional opportunities at NIEPMD and beyond."
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-12 pt-8">
+                <StatItem label="Active Vacancies" value="1.4k" icon={<Briefcase className="text-saffron" />} />
+                <StatItem label="Partner Institutes" value="85+" icon={<Award className="text-chakra" />} />
+                <StatItem label="Success Stories" value="3k+" icon={<Users className="text-emerald" />} />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-24 bg-transparent">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-20 space-y-4">
-            <h2 className="text-5xl font-black">{simpleMode ? "How we help you" : "Comprehensive Support System"}</h2>
-            <p className="opacity-70 max-w-2xl mx-auto text-xl font-medium">
-              {simpleMode ? "We have everything you need to get a good job." : "We provide the tools and guidance needed to succeed in today's competitive job market."}
-            </p>
+      {/* Services Grid */}
+      <section className="py-24 bg-white/50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <div className="max-w-2xl space-y-4">
+              <h2 className="text-5xl font-black text-chakra-dark tracking-tight">Built for <span className="text-emerald">Excellence</span></h2>
+              <p className="text-lg font-medium text-chakra/60">Everything you need to secure your future, designed with accessibility at its core.</p>
+            </div>
+            <Link to="/register" className="btn-outline">View All Services <ChevronRight size={20} /></Link>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <FeatureCard 
-              icon={<Briefcase className="w-8 h-8" />}
-              title={simpleMode ? "Good Jobs" : "4% Reserved Category Jobs"}
-              desc={simpleMode ? "Find jobs made for you in NIEPMD and other places." : "Direct access to vacancies under the 4% reservation scheme in NIEPMD and other institutions."}
-              highContrast={highContrast}
+              icon={<ShieldCheck size={32} />}
+              title="Verified Jobs"
+              color="saffron"
+              desc="Directly sourced from NIEPMD and national career portals under the 4% reservation."
             />
             <FeatureCard 
-              icon={<GraduationCap className="w-8 h-8" />}
-              title={simpleMode ? "Learn Skills" : "Guided Career Paths"}
-              desc={simpleMode ? "Simple lessons to help you learn and grow." : "Step-by-step roadmaps: from skill assessment to interview preparation and placement."}
-              highContrast={highContrast}
+              icon={<GraduationCap size={32} />}
+              title="Smart Coaching"
+              color="chakra"
+              desc="Adaptive learning modules tailored to your pace and specific job requirements."
             />
             <FeatureCard 
-              icon={<Accessibility className="w-8 h-8" />}
-              title={simpleMode ? "Easy to Use" : "Accessibility First"}
-              desc={simpleMode ? "Our app works for everyone. Big buttons and easy reading." : "Built-in voice navigation, screen reader support, and high-contrast visuals for a seamless experience."}
-              highContrast={highContrast}
+              icon={<Accessibility size={32} />}
+              title="Universal Access"
+              color="emerald"
+              desc="Full voice navigation and high-contrast support for a truly inclusive experience."
             />
           </div>
         </div>
       </section>
 
-      {/* How it Works */}
-      <section className={`py-32 rounded-[4rem] mx-4 mb-20 shadow-2xl relative overflow-hidden ${highContrast ? 'bg-gray-900 border-4 border-yellow-300' : 'bg-[#000080] text-white'}`}>
-        {!highContrast && (
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+      {/* Path Section */}
+      <section className="py-32 bg-chakra text-white rounded-[3rem] mx-6 my-12 relative overflow-hidden shadow-2xl">
+        <div className="absolute inset-0 bg-mesh opacity-20"></div>
+        <div className="max-w-7xl mx-auto px-8 relative z-10">
+          <div className="text-center mb-24 space-y-6">
+            <h2 className="text-5xl md:text-7xl font-black tracking-tight">Your Journey to <span className="text-saffron">Success</span></h2>
+            <p className="text-xl opacity-60 max-w-2xl mx-auto font-medium">Follow the guided path to your dream career.</p>
           </div>
-        )}
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <h2 className="text-5xl font-black text-center mb-20 tracking-tight">{simpleMode ? "4 Steps to Success" : "Your Path to Employment"}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <Step number="01" title={simpleMode ? "Join" : "Onboarding"} desc={simpleMode ? "Tell us about yourself." : "Create your profile and list your skills."} />
-            <Step number="02" title={simpleMode ? "Learn" : "Skill Up"} desc={simpleMode ? "Take easy classes." : "Complete training modules for your job."} />
-            <Step number="03" title={simpleMode ? "Apply" : "Apply"} desc={simpleMode ? "Pick a job you like." : "Discover verified jobs and apply."} />
-            <Step number="04" title={simpleMode ? "Job" : "Succeed"} desc={simpleMode ? "Start your new work!" : "Get coached and start your journey."} />
-          </div>
-        </div>
-      </section>
-
-      {/* Accessibility Showcase */}
-      <section className="py-24 mb-20">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-20">
-          <div className="md:w-1/2 space-y-8">
-            <h2 className="text-5xl font-black leading-tight tracking-tighter">Designed for <span className={highContrast ? 'text-yellow-300' : 'text-[#128807]'}>{simpleMode ? "You" : "Everyone"}</span></h2>
-            <p className="text-2xl font-medium opacity-80 leading-relaxed">
-              {simpleMode ? "We believe every person can work and succeed. We made this app simple for you." : "We believe technology should empower, not exclude. Our platform is built on WCAG 2.1 standards."}
-            </p>
-            <ul className="space-y-6">
-              <AccessPoint text={simpleMode ? "Listen to page" : "Integrated Text-to-Speech"} highContrast={highContrast} />
-              <AccessPoint text={simpleMode ? "Bright colors" : "One-Click High Contrast Mode"} highContrast={highContrast} />
-              <AccessPoint text={simpleMode ? "Voice control" : "Keyboard & Voice Navigation"} highContrast={highContrast} />
-              <AccessPoint text={simpleMode ? "Easy words" : "Simplified Language Mode"} highContrast={highContrast} />
-            </ul>
-          </div>
-          <div className="md:w-1/2 grid grid-cols-2 gap-8 relative">
-             <div className={`absolute -z-10 w-full h-full border-4 border-dashed rounded-[3rem] -rotate-3 ${highContrast ? 'border-yellow-300' : 'border-gray-100'}`}></div>
-            <div className={`h-64 rounded-3xl flex flex-col items-center justify-center p-8 text-center gap-4 transition-transform hover:-rotate-3 ${highContrast ? 'border-2 border-yellow-300' : 'bg-white border border-gray-100 shadow-2xl'}`}>
-              <TrendingUp className={`w-12 h-12 ${highContrast ? 'text-yellow-300' : 'text-[#FF9933]'}`} />
-              <span className="font-black text-xl">Grow</span>
-            </div>
-            <div className={`h-64 rounded-3xl flex flex-col items-center justify-center p-8 text-center gap-4 transition-transform hover:rotate-3 mt-12 ${highContrast ? 'border-2 border-yellow-300' : 'bg-white border border-gray-100 shadow-2xl'}`}>
-              <UserCheck className={`w-12 h-12 ${highContrast ? 'text-yellow-300' : 'text-[#128807]'}`} />
-              <span className="font-black text-xl">Succeed</span>
-            </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
+            <Step number="01" title="Digital Profile" desc="Create your verified professional identity." />
+            <Step number="02" title="Skill Sync" desc="Complete modules matched to your goals." />
+            <Step number="03" title="Interview Ready" desc="Practice with our AI simulator." />
+            <Step number="04" title="Placements" desc="Get hired by top institutions." />
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className={`py-24 border-t ${highContrast ? 'bg-black border-yellow-300 text-yellow-300' : 'bg-gray-50 border-gray-100 text-gray-700'}`}>
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-16">
-          <div className="space-y-6">
-            <div className="text-4xl font-black flex items-center gap-3">
-              <div className={`p-3 rounded-2xl ${highContrast ? 'bg-yellow-300 text-black' : 'bg-[#000080] text-white'}`}>
-                <Briefcase size={32} />
+      <footer className="pt-32 pb-12 bg-white border-t border-chakra/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-20 pb-20 border-b border-chakra/5">
+            <div className="col-span-2 space-y-10">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 rounded-2xl bg-chakra flex items-center justify-center text-white shadow-xl shadow-chakra/20">
+                  <Briefcase size={32} />
+                </div>
+                <span className="text-4xl font-black tracking-tighter text-chakra-dark">Udyog Saarthi</span>
               </div>
-              Udyog Saarthi
+              <p className="text-2xl font-semibold text-chakra/80 leading-relaxed max-w-md">
+                Dedicated to the Nation. <br />Empowering Every Indian through Inclusive Employment.
+              </p>
+              <div className="flex gap-4">
+                <div className="w-12 h-12 rounded-full bg-saffron/10 flex items-center justify-center text-saffron hover:bg-saffron hover:text-white transition-all cursor-pointer">
+                  <Star size={20} />
+                </div>
+                <div className="w-12 h-12 rounded-full bg-chakra/10 flex items-center justify-center text-chakra hover:bg-chakra hover:text-white transition-all cursor-pointer">
+                  <ShieldCheck size={20} />
+                </div>
+                <div className="w-12 h-12 rounded-full bg-emerald/10 flex items-center justify-center text-emerald hover:bg-emerald hover:text-white transition-all cursor-pointer">
+                  <Users size={20} />
+                </div>
+              </div>
             </div>
-            <p className="text-lg font-medium opacity-60 leading-relaxed">
-              Empowering the nation through inclusive employment. Join the movement for an accessible India.
-            </p>
-          </div>
+            
+            <div className="space-y-8">
+              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-chakra/40">Contact HQ</h4>
+              <ul className="space-y-6">
+                <li className="flex gap-4">
+                  <MapPin className="text-saffron shrink-0" />
+                  <span className="font-bold text-chakra">LPU, Punjab, India</span>
+                </li>
+                <li className="flex gap-4">
+                  <Clock className="text-chakra shrink-0" />
+                  <span className="font-bold text-chakra">+91 6304233983</span>
+                </li>
+              </ul>
+            </div>
 
-          <div className="space-y-6">
-            <h4 className="text-xl font-black uppercase tracking-widest opacity-40">Contact Us</h4>
-            <div className="space-y-4 font-bold">
-              <p className="flex items-center gap-3 group">
-                <MapPin className={`transition-colors ${highContrast ? 'text-yellow-300' : 'text-[#FF9933]'}`} size={20} />
-                <span>LPU, Punjab, India</span>
-              </p>
-              <p className="flex items-center gap-3 group">
-                <Clock className={`transition-colors ${highContrast ? 'text-yellow-300' : 'text-[#000080]'}`} size={20} />
-                <span>+91 6304233983</span>
-              </p>
-              <p className="flex items-center gap-3 group">
-                <ShieldCheck className={`transition-colors ${highContrast ? 'text-yellow-300' : 'text-[#128807]'}`} size={20} />
-                <span className="break-all text-sm sm:text-base">billakantisaivinay943@gmail.com</span>
-              </p>
+            <div className="space-y-8">
+              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-chakra/40">Resources</h4>
+              <ul className="space-y-4">
+                <li><a href="#" className="nav-link !p-0">Privacy & Terms</a></li>
+                <li><a href="#" className="nav-link !p-0">Accessibility Standards</a></li>
+                <li><a href="#" className="nav-link !p-0">NIEPMD Portal</a></li>
+              </ul>
             </div>
           </div>
-
-          <div className="space-y-6">
-            <h4 className="text-xl font-black uppercase tracking-widest opacity-40">Quick Links</h4>
-            <div className="flex flex-col gap-3 font-black text-lg">
-              <a href="#" className="hover:text-[#FF9933] transition">Privacy Policy</a>
-              <a href="#" className="hover:text-[#128807] transition">Accessibility Statement</a>
-              <a href="#" className="hover:text-[#000080] transition">National Portal</a>
+          
+          <div className="pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-xs font-black uppercase tracking-[0.3em] opacity-30">© 2026 Udyog Saarthi • Dedicated to the Nation</p>
+            <div className="flex gap-3">
+              <div className="w-3 h-3 rounded-full bg-saffron"></div>
+              <div className="w-3 h-3 rounded-full bg-white border border-gray-200"></div>
+              <div className="w-3 h-3 rounded-full bg-emerald"></div>
             </div>
-          </div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 mt-20 pt-10 border-t border-gray-200/50 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-sm font-bold opacity-40 uppercase tracking-widest">
-            © 2026 Udyog Saarthi • Dedicated to the Nation
-          </div>
-          <div className="flex gap-6">
-             <div className="w-8 h-8 rounded-full bg-[#FF9933] opacity-20"></div>
-             <div className="w-8 h-8 rounded-full bg-white border border-gray-200"></div>
-             <div className={`w-8 h-8 rounded-full ${highContrast ? 'bg-yellow-300' : 'bg-[#128807]'} opacity-20`}></div>
           </div>
         </div>
       </footer>
@@ -239,23 +237,32 @@ export default function Landing({ user, highContrast, simpleMode }) {
   );
 }
 
-function StatItem({ label, value, highContrast }) {
+function StatItem({ label, value, icon }) {
   return (
-    <div className="space-y-2">
-      <div className={`text-4xl md:text-6xl font-black ${highContrast ? 'text-yellow-300' : 'text-[#000080]'}`}>{value}</div>
-      <div className="text-sm font-black opacity-50 uppercase tracking-[0.2em]">{label}</div>
+    <div className="flex flex-col items-center gap-3">
+      <div className="p-3 rounded-xl bg-white shadow-lg border border-chakra/5">
+        {React.cloneElement(icon, { size: 24 })}
+      </div>
+      <div className="text-3xl font-black text-chakra-dark">{value}</div>
+      <div className="text-[10px] font-black uppercase tracking-widest text-chakra/40">{label}</div>
     </div>
   );
 }
 
-function FeatureCard({ icon, title, desc, highContrast }) {
+function FeatureCard({ icon, title, desc, color }) {
+  const colors = {
+    saffron: 'text-saffron bg-saffron/5 group-hover:bg-saffron group-hover:text-white',
+    emerald: 'text-emerald bg-emerald/5 group-hover:bg-emerald group-hover:text-white',
+    chakra: 'text-chakra bg-chakra/5 group-hover:bg-chakra group-hover:text-white'
+  };
+
   return (
-    <div className={`p-10 rounded-[2.5rem] transition-all hover:-translate-y-2 group cursor-pointer ${highContrast ? 'border-2 border-yellow-300 bg-black' : 'bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100'}`}>
-      <div className={`w-20 h-20 rounded-2xl flex items-center justify-center mb-8 transition-transform group-hover:scale-110 group-hover:rotate-6 ${highContrast ? 'bg-yellow-300 text-black' : 'bg-gray-50 text-[#000080]'}`}>
+    <div className="glass-card p-10 group cursor-pointer border-transparent hover:border-chakra/10">
+      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500 ${colors[color]}`}>
         {icon}
       </div>
-      <h3 className="text-3xl font-black mb-6">{title}</h3>
-      <p className="text-lg opacity-70 leading-relaxed font-medium">{desc}</p>
+      <h3 className="text-2xl font-black mb-4 text-chakra-dark">{title}</h3>
+      <p className="text-chakra/60 font-medium leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -263,21 +270,9 @@ function FeatureCard({ icon, title, desc, highContrast }) {
 function Step({ number, title, desc }) {
   return (
     <div className="space-y-6 group">
-      <div className="text-7xl font-black opacity-10 group-hover:opacity-30 transition-opacity">{number}</div>
-      <h4 className="text-2xl font-black tracking-tight">{title}</h4>
-      <p className="opacity-80 text-lg leading-relaxed font-medium">{desc}</p>
+      <div className="text-6xl font-black text-white/10 group-hover:text-saffron transition-colors duration-500">{number}</div>
+      <h4 className="text-xl font-extrabold tracking-tight">{title}</h4>
+      <p className="text-white/60 font-medium leading-relaxed">{desc}</p>
     </div>
   );
 }
-
-function AccessPoint({ text, highContrast }) {
-  return (
-    <li className="flex items-center gap-4 group cursor-default">
-      <div className={`w-3 h-3 rounded-full transition-transform group-hover:scale-150 ${highContrast ? 'bg-yellow-300' : 'bg-[#FF9933]'}`}></div>
-      <span className="font-bold text-xl opacity-90">{text}</span>
-    </li>
-  );
-}
-
-
-

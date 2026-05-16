@@ -1,48 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #FF9933; /* Saffron */
-  --color-primary-dark: #cc7a29;
-  --color-secondary: #128807; /* Green */
-  --color-accent: #000080; /* Ashoka Blue */
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  
+  /* Patriotic Palette - Premium HSL */
+  --color-saffron: hsl(28, 100%, 60%);
+  --color-saffron-dark: hsl(28, 100%, 45%);
+  --color-saffron-light: hsl(28, 100%, 92%);
+  
+  --color-emerald: hsl(115, 95%, 28%);
+  --color-emerald-dark: hsl(115, 95%, 20%);
+  --color-emerald-light: hsl(115, 95%, 92%);
+  
+  --color-chakra: hsl(240, 100%, 25%);
+  --color-chakra-dark: hsl(240, 100%, 15%);
+  --color-chakra-light: hsl(240, 100%, 92%);
+  
+  --color-premium-white: hsl(210, 20%, 98%);
+  --color-premium-glass: hsla(0, 0%, 100%, 0.7);
 }
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    @apply bg-premium-white text-chakra-dark font-sans antialiased selection:bg-saffron/30;
+    scroll-behavior: smooth;
   }
-  
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-extrabold tracking-tight;
+  }
+
+  /* High Contrast Mode Overrides */
   .high-contrast {
-    @apply bg-black text-yellow-300;
+    background-color: #000000 !important;
+    color: #ffff00 !important;
   }
-  
+
   .high-contrast * {
     border-color: #ffff00 !important;
-  }
-  
-  .high-contrast bg-white {
-    @apply bg-black;
-  }
-  
-  .high-contrast text-gray-900 {
-    @apply text-yellow-300;
+    background-color: transparent !important;
+    color: #ffff00 !important;
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-2xl shadow-chakra/5 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-chakra/10 hover:-translate-y-1;
+  }
+
+  .btn-primary {
+    @apply px-8 py-4 bg-saffron text-white font-bold rounded-2xl shadow-lg shadow-saffron/20 transition-all duration-300 hover:bg-saffron-dark hover:shadow-saffron/40 active:scale-95 flex items-center justify-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply px-8 py-4 bg-emerald text-white font-bold rounded-2xl shadow-lg shadow-emerald/20 transition-all duration-300 hover:bg-emerald-dark hover:shadow-emerald/40 active:scale-95 flex items-center justify-center gap-2;
+  }
+
+  .btn-outline {
+    @apply px-8 py-4 bg-white/50 border-2 border-chakra/10 text-chakra font-bold rounded-2xl transition-all duration-300 hover:border-chakra hover:bg-chakra/5 active:scale-95 flex items-center justify-center gap-2;
+  }
+
+  .nav-link {
+    @apply px-4 py-2 text-sm font-semibold text-chakra/70 hover:text-saffron transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:w-0 after:h-0.5 after:bg-saffron after:transition-all hover:after:w-full hover:after:left-0;
+  }
+
+  .patriotic-gradient {
+    @apply bg-gradient-to-br from-saffron/5 via-white to-emerald/5;
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
 }
 
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.8s ease-out forwards;
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
 }
 
-.animate-slide-up {
-  animation: slideUp 0.8s ease-out forwards;
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.bg-mesh {
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(28, 100%, 60%, 0.15) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(115, 95%, 28%, 0.1) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(240, 100%, 25%, 0.1) 0, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(28, 100%, 60%, 0.1) 0, transparent 50%);
 }
