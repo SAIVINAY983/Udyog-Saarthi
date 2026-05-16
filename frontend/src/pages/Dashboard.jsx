@@ -181,7 +181,13 @@ export default function Dashboard({ user, highContrast, simpleMode }) {
 
       {/* Tabs Navigation */}
       <div className="flex gap-2 p-1.5 bg-chakra/5 rounded-3xl w-fit mb-10 border border-chakra/5">
-        {(user.role === 'user' ? ['jobs', 'training', 'applications'] : ['jobs', 'talent']).map(tab => (
+        {(user.role === 'user' 
+          ? ['jobs', 'training', 'applications'] 
+          : (user.role === 'trainer' || user.role === 'admin' 
+            ? ['jobs', 'training', 'talent'] 
+            : ['jobs', 'talent']
+          )
+        ).map(tab => (
           <button 
             key={tab} 
             onClick={() => setActiveTab(tab)} 
@@ -205,12 +211,21 @@ export default function Dashboard({ user, highContrast, simpleMode }) {
         )}
 
         {activeTab === 'training' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {modules.length === 0 ? (
-              <EmptyState title="Learning Hub Empty" desc="Stay tuned for curated training modules tailored for your career." icon={<BookOpen />} />
-            ) : modules.map(mod => (
-              <TrainingCard key={mod.id} module={mod} />
-            ))}
+          <div className="space-y-8">
+            {(user.role === 'trainer' || user.role === 'admin') && (
+              <div className="flex justify-end">
+                <button onClick={() => setShowAddModule(true)} className="btn-secondary">
+                  <Plus size={20} /> Create Training Module
+                </button>
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {modules.length === 0 ? (
+                <EmptyState title="Learning Hub Empty" desc="Stay tuned for curated training modules tailored for your career." icon={<BookOpen />} />
+              ) : modules.map(mod => (
+                <TrainingCard key={mod.id} module={mod} isAdmin={user.role === 'trainer' || user.role === 'admin'} onEdit={() => setEditingModule(mod)} />
+              ))}
+            </div>
           </div>
         )}
 
@@ -443,7 +458,7 @@ function JobCard({ job, user, onApply }) {
   );
 }
 
-function TrainingCard({ module }) {
+function TrainingCard({ module, isAdmin, onEdit }) {
   return (
     <div className="glass-card p-8 group flex flex-col justify-between">
       <div>
@@ -451,7 +466,14 @@ function TrainingCard({ module }) {
           <div className="p-4 bg-emerald/5 text-emerald rounded-2xl group-hover:bg-emerald group-hover:text-white transition-all duration-500">
             <GraduationCap size={28} />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-chakra/30">{module.module_type}</span>
+          <div className="flex gap-2 items-center">
+            <span className="text-[10px] font-black uppercase tracking-widest text-chakra/30">{module.module_type}</span>
+            {isAdmin && (
+              <button onClick={onEdit} className="p-2 hover:bg-chakra/5 rounded-lg text-chakra/30 hover:text-saffron transition-colors">
+                <Edit size={14} />
+              </button>
+            )}
+          </div>
         </div>
         <h3 className="text-2xl font-black text-chakra-dark mb-3">{module.title}</h3>
         <p className="text-sm text-chakra/50 font-medium mb-8 line-clamp-2">{module.description}</p>
