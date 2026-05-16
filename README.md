@@ -4,6 +4,12 @@
 
 ---
 
+### 🌐 Live Deployment
+*   **Live Website**: [https://udyog-saarthi.vercel.app](https://udyog-saarthi.vercel.app)
+*   **API Backend**: [https://udyog-saarthi.onrender.com](https://udyog-saarthi.onrender.com)
+
+---
+
 ## 🚀 The Vision
 Adults undergoing job coaching often face challenges in finding a centralized platform that speaks their language—one that provides not just job listings, but the **tools, training, and confidence** needed to thrive in a professional environment. 
 
@@ -28,8 +34,10 @@ Adults undergoing job coaching often face challenges in finding a centralized pl
 
 ## 💻 Tech Stack
 *   **Frontend:** React.js, Tailwind CSS, Lucide Icons.
-*   **Backend:** Laravel (PHP), MySQL.
-*   **Authentication:** Laravel Sanctum (Secure Token-based).
+*   **Backend:** Laravel 11 (PHP 8.2), Docker.
+*   **Database:** MongoDB Atlas (Cloud NoSQL).
+*   **Authentication:** Laravel Sanctum (Custom MongoDB Bridge).
+*   **Hosting:** Render (Backend), Vercel (Frontend).
 *   **PDF Generation:** html2pdf.js.
 *   **Speech Services:** Web Speech API (Recognition & Synthesis).
 
